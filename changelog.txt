@@ -1,0 +1,40 @@
+V 1.8.2 (2017-07-01)
+- Fix Search
+
+V 1.7.1 (2017-05-06)
+- Add Filter to remove results from latest episodes
+
+V 1.6.9 (2017-04-05)
+- Bug fixes
+- Minor enhancements
+- Cache web requests to speed things on
+- Save temp requests to addon_data
+- Oops bug fixes
+
+V 1.6.3 (2017-04-05)
+- Oops bug fixes
+
+V 1.6.2 (2017-04-05)
+- Oops bug fixes
+
+V 1.6.1 (2017-04-05)
+- Oops bug fixes
+
+V 1.6.0 (2017-04-05)
+- Bug Fixes to Save Show/Remove Show
+- Search Show Fixes
+- Save Show Adding to Main Episode List
+
+V 1.5.0 (2017-02-20)
+- Added parser to get details from the linked show
+- Added formatter to label the show name with color for details parser has found
+- Parser tries to find a date in a few formats and Season and Episode Number.
+
+V 1.2.0 (2017-02-15)
+- Added setting for favourite file sources
+- Uses sources in settings to sort them to top of list
+- Fixed problem with url request getting access denied from new .PL server by using REQUESTS module
+
+V 1.1.0 (2017-02-14)
+- Hostname changed to watchseries-online.pl
+- Added setting for addon to specify the current hostname
