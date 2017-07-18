@@ -1,3 +1,8 @@
+v 1.9.3
+- AutoPlay feature for your prefer host tries to find first link matching your preferred host and play it.
+- More bugfixes, Colors added to help view new dates
+- Fixed searching, and category lists.
+
 V 1.8.2 (2017-07-01)
 - Fix Search
 
