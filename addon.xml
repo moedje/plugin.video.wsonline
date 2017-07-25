@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.wsonline" name="WatchSeries-Online" provider-name="moedje" version="1.9.3">
+<addon id="plugin.video.wsonline" name="WatchSeries-Online" provider-name="moedje" version="1.9.4">
     <requires>
         <import addon="xbmc.python" version="2.24.0"/>
         <import addon="script.module.requests" optional="false"/>
@@ -18,7 +18,7 @@
         <summary>Watchseries-online TV Plugin</summary>
         <description>Get the latest TV episodes on Watchseries-Online(.pl/.nl/.la...) and search for a series, list all online
             episodes in that series, and play them from Openload.Co or VODlocker
-            [B]v1.9.3[/B] AutoPlay feature for your prefer host tries to find first link matching your preferred host and play it. 1.8.3 up More bugfixes. 1.8: Fixed a problem with addon only returning 1 result due to a change in the HTML  of the WatchSeries-Online Website V1.7.1 2017-05-06 Added filter results settings V1.6.9 Minor fixes/changes to make Save Show and Remove show work better. Make Search Show work as currently doesn't. V1.5 2017-2-20: Parsers have been added to attempt to grab details out of the name of the show such as the date, episode number and season. Formats the listings to be standard for easy sorting and reading through including color to make date stand out. V1.2.0 2018-02-14: New playback and video file resolving fixing many bugs. Source Sorting and fave sources can be set in settings. Updated to new watchseries-online host which is currently .PL and added this as a setting that can be changed in the addon so I don't have to release an update each time they move servers.
+            [B]v1.9.5[/B] Fix Autoplay not marking source item as watched. v1.9.3 AutoPlay feature for your prefer host tries to find first link matching your preferred host and play it. 1.8.3 up More bugfixes. 1.8: Fixed a problem with addon only returning 1 result due to a change in the HTML  of the WatchSeries-Online Website V1.7.1 2017-05-06 Added filter results settings V1.6.9 Minor fixes/changes to make Save Show and Remove show work better. Make Search Show work as currently doesn't. V1.5 2017-2-20: Parsers have been added to attempt to grab details out of the name of the show such as the date, episode number and season. Formats the listings to be standard for easy sorting and reading through including color to make date stand out. V1.2.0 2018-02-14: New playback and video file resolving fixing many bugs. Source Sorting and fave sources can be set in settings. Updated to new watchseries-online host which is currently .PL and added this as a setting that can be changed in the addon so I don't have to release an update each time they move servers.
         </description>
     </extension>
 </addon>

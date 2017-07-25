@@ -32,7 +32,7 @@ def index():
     itemsaved = {'label': 'Saved Shows', 'path': plugin.url_for(saved), 'icon': 'DefaultFolder.png',
                  'thumbnail': 'DefaultFolder.png'}
     itemplay = {'label': 'Resolve URL and Play (URLresolver required)',
-                'path': plugin.url_for(endpoint=playurl, name='', url=''),
+                'path': plugin.url_for(endpoint=resolveurl),
                 'icon': 'DefaultFolder.png', 'thumbnail': 'DefaultFolder.png'}
     itemsearch = {'label': 'Search', 'icon': __imgsearch__, 'thumbnail': __imgsearch__,
                   'path': plugin.url_for(search, dopaste=bool(False))}
@@ -100,6 +100,8 @@ def episode_makeitem(episodename, episodelink, dateadded=None):
         item = {'label': eplbl, 'label2': epdate, 'icon': img, 'thumbnail': img, 'path': spath}
         item.setdefault(item.keys()[0])
         li = ListItem.from_dict(**item)
+        li.set_is_playable(is_playable=True)
+        li.is_folder = True
         li.set_info(type='video', info_labels=infolbl)
         li.add_context_menu_items(
             [('Autoplay', 'RunPlugin("{0}")'.format(plugin.url_for(endpoint=playfirst, url=episodelink)),)])
@@ -509,8 +511,34 @@ def episode(name='', url=''):
 
 @plugin.route('/playfirst/<url>')
 def playfirst(url=''):
+    idx = 0
     if len(url) < 1:
         return None
+    thispath = plugin.url_for(endpoint=play, url=url)
+    selItem = None
+    outtxt = "Not Found"
+    try:
+        for fitem in plugin.added_items:
+            if fitem.selected == True or fitem.path.find(thispath) != -1:
+                try:
+                    plugin.set_resolved_url(fitem)
+                    fitem.is_playable(True)
+                    fitem.played(True)
+                except:
+                    pass
+                selItem = fitem
+                plugin.notify(msg=selItem.label, title="Found item")
+                break
+    except:
+        selItem = None
+    if selItem is not None:
+        try:
+            selItem.set_is_playable(True)
+            selItem.set_played(was_played=True)
+            outtxt = selItem.label + " " + selItem.label2
+        except:
+            outtxt = str(repr(selItem))
+    plugin.notify(msg=outtxt, title=str(idx))
     html = DL(url)
     prefhost = ''
     sourceslist = []
@@ -524,35 +552,40 @@ def playfirst(url=''):
     linklist = findvidlinks(html, findhost=prefhost)
     if len(linklist) > 0:
         name, link = linklist[0]
-        # plugin.notify(msg=link, title="Playing {0}".format(name))
-        # plugin.redirect(plugin.url_for(endpoint=play, url=link))
-        # name, link = linklist
-        # itempath = plugin.url_for(play, url=link)
-        # item = dict(label=name, label2=link, icon='DefaultFolder.png', thumbnail='DefaultFolder.png', path=itempath)
-        # item.setdefault(item.keys()[0])
-        # litem = ListItem.from_dict(**item)
-        # litem.set_is_playable(True)
-        # litem.set_info(type='video', info_labels={'Title': item.label, 'Plot': item.label2})
-        # litem.add_stream_info(stream_type='video', stream_values={})
-        return [playurl(name=name, url=link)]
+        itempath = plugin.url_for(play, url=link)
+        sitem = dict(label=name, label2=link, icon='DefaultFolder.png', thumbnail='DefaultFolder.png', path=itempath)
+        sitem.setdefault(sitem.keys()[0])
+        item = ListItem.from_dict(**sitem)
+        item.set_is_playable(True)
+        item.set_info(type='video', info_labels={'Title': item.label, 'Plot': item.label2})
+        item.add_stream_info(stream_type='video', stream_values={})
+        plugin.notify(msg=link, title=name)
+        #plugin.add_items([item])
+        item.set_played(was_played=True)
+        #plugin.add_items([plugin.set_resolved_url(link)])#.as_tuple())])
+        plugin.play_video(item)
+        return [plugin.set_resolved_url(item)]
+        #return [playurl(name=name, url=link)]
         # return plugin.finish(items=[plugin.set_resolved_url(item=play(link))])
 
 
-@plugin.route('/playurl/<name>/<url>')
-def playurl(name="WatchSeries-Online", url=''):
-    if len(url) < 1:
-        url = plugin.keyboard(default='', heading='Video Page URL')
+@plugin.route('/resolveurl')
+def resolveurl():
+    url = plugin.keyboard(default='', heading='Video Page URL')
+    if url is not None:
         name = url
-    if len(url) > 0:
-        item = ListItem(label=name, label2=url, icon='DefaultVideo.png', thumbnail='DefaultVideo.png', path=plugin.url_for(endpoint=play, url=url))
-        item.set_is_playable(True)
-        item.set_info(type='video', info_labels={'Title': url, 'Plot': url})
-        item.add_stream_info(stream_type='video', stream_values={})
-        playable = play(url)
-        resurl = playable.path
-        plugin.notify(msg=resurl, title="Playing..")
-        plugin.play_video(playable)
-
+        if len(url) > 0:
+            item = ListItem(label=name, label2=url, icon='DefaultVideo.png', thumbnail='DefaultVideo.png', path=plugin.url_for(endpoint=play, url=url))
+            item.set_is_playable(True)
+            item.set_info(type='video', info_labels={'Title': url, 'Plot': url})
+            item.add_stream_info(stream_type='video', stream_values={})
+            playable = play(url)
+            plugin.notify(msg=playable.path, title="Playing..")
+            plugin.play_video(playable)
+    #plugin.redirect(plugin.url_for(index))
+    plugin.clear_added_items()
+    plugin.end_of_directory()
+    #return None
 
 @plugin.route('/play/<url>')
 def play(url):
